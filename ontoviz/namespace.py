@@ -6,10 +6,23 @@ from rdflib.term import URIRef, Variable, _XSD_PFX, _is_valid_uri
 
 
 __all__ = [
-    'is_ncname', 'split_uri', 'Namespace',
-    'ClosedNamespace', 'NamespaceManager',
-    'XMLNS', 'RDF', 'RDFS', 'XSD', 'OWL',
-    'SKOS', 'DOAP', 'FOAF', 'DC', 'DCTERMS', 'VOID']
+    'is_ncname',
+    'split_uri',
+    'Namespace',
+    'ClosedNamespace',
+    'NamespaceManager',
+    'XMLNS',
+    'RDF',
+    'RDFS',
+    'XSD',
+    'OWL',
+    'SKOS',
+    'DOAP',
+    'FOAF',
+    'DC',
+    'DCTERMS',
+    'VOID',
+]
 
 
 class Namespace(str):
@@ -87,9 +100,7 @@ class ClosedNamespace(object):
     def term(self, name):
         uri = self.__uris.get(name)
         if uri is None:
-            raise AttributeError(
-                "term '{}' not in namespace '{}'".format(name, self.uri)
-            )
+            raise AttributeError("term '{}' not in namespace '{}'".format(name, self.uri))
         else:
             return uri
 
@@ -113,28 +124,45 @@ class _RDFNamespace(ClosedNamespace):
     """
     Closed namespace for RDF terms
     """
+
     def __init__(self):
         super(_RDFNamespace, self).__init__(
             URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
             terms=[
                 # Syntax Names
-                "RDF", "Description", "ID", "about", "parseType",
-                "resource", "li", "nodeID", "datatype",
-
+                "RDF",
+                "Description",
+                "ID",
+                "about",
+                "parseType",
+                "resource",
+                "li",
+                "nodeID",
+                "datatype",
                 # RDF Classes
-                "Seq", "Bag", "Alt", "Statement", "Property",
-                "List", "PlainLiteral",
-
+                "Seq",
+                "Bag",
+                "Alt",
+                "Statement",
+                "Property",
+                "List",
+                "PlainLiteral",
                 # RDF Properties
-                "subject", "predicate", "object", "type",
-                "value", "first", "rest",
+                "subject",
+                "predicate",
+                "object",
+                "type",
+                "value",
+                "first",
+                "rest",
                 # and _n where n is a non-negative integer
-
                 # RDF Resources
                 "nil",
-
                 # Added in RDF 1.1
-                "XMLLiteral", "HTML", "langString"]
+                "XMLLiteral",
+                "HTML",
+                "langString",
+            ],
         )
 
     def term(self, name):
@@ -151,9 +179,22 @@ RDF = _RDFNamespace()
 RDFS = ClosedNamespace(
     uri=URIRef("http://www.w3.org/2000/01/rdf-schema#"),
     terms=[
-        "Resource", "Class", "subClassOf", "subPropertyOf", "comment", "label",
-        "domain", "range", "seeAlso", "isDefinedBy", "Literal", "Container",
-        "ContainerMembershipProperty", "member", "Datatype"]
+        "Resource",
+        "Class",
+        "subClassOf",
+        "subPropertyOf",
+        "comment",
+        "label",
+        "domain",
+        "range",
+        "seeAlso",
+        "isDefinedBy",
+        "Literal",
+        "Container",
+        "ContainerMembershipProperty",
+        "member",
+        "Datatype",
+    ],
 )
 
 OWL = Namespace('http://www.w3.org/2002/07/owl#')
@@ -199,6 +240,7 @@ class NamespaceManager(object):
         >>>
 
     """
+
     def __init__(self, graph):
         self.graph = graph
         self.__cache = {}
@@ -222,6 +264,7 @@ class NamespaceManager(object):
 
     def __get_store(self):
         return self.graph.store
+
     store = property(__get_store)
 
     def qname(self, uri):
@@ -285,16 +328,14 @@ class NamespaceManager(object):
                 pl_namespace = get_longest_namespace(self.__strie[namespace], uri)
                 if pl_namespace is not None:
                     namespace = pl_namespace
-                    name = uri[len(namespace):]
+                    name = uri[len(namespace) :]
 
             namespace = URIRef(namespace)
             prefix = self.store.prefix(namespace)  # warning multiple prefixes problem
 
             if prefix is None:
                 if not generate:
-                    raise KeyError(
-                        "No known prefix for {} and generate=False".format(namespace)
-                    )
+                    raise KeyError("No known prefix for {} and generate=False".format(namespace))
                 num = 1
                 while 1:
                     prefix = "ns%s" % num
@@ -317,33 +358,33 @@ class NamespaceManager(object):
                 try:
                     namespace, name = split_uri(uri, NAME_START_CATEGORIES)
                 except ValueError as e:
-                    message = ('This graph cannot be serialized to a strict format '
-                               'because there is no valid way to shorten {uri}'.format(uri))
+                    message = (
+                        'This graph cannot be serialized to a strict format '
+                        'because there is no valid way to shorten {uri}'.format(uri)
+                    )
                     raise ValueError(message)
                     # omitted for strict since NCNames cannot be empty
-                    #namespace = URIRef(uri)
-                    #prefix = self.store.prefix(namespace)
-                    #if not prefix:
-                        #raise e
+                    # namespace = URIRef(uri)
+                    # prefix = self.store.prefix(namespace)
+                    # if not prefix:
+                    # raise e
 
                 if namespace not in self.__strie:
                     insert_strie(self.__strie, self.__trie, namespace)
 
                 # omitted for strict
-                #if self.__strie[namespace]:
-                    #pl_namespace = get_longest_namespace(self.__strie[namespace], uri)
-                    #if pl_namespace is not None:
-                        #namespace = pl_namespace
-                        #name = uri[len(namespace):]
+                # if self.__strie[namespace]:
+                # pl_namespace = get_longest_namespace(self.__strie[namespace], uri)
+                # if pl_namespace is not None:
+                # namespace = pl_namespace
+                # name = uri[len(namespace):]
 
                 namespace = URIRef(namespace)
                 prefix = self.store.prefix(namespace)  # warning multiple prefixes problem
 
                 if prefix is None:
                     if not generate:
-                        raise KeyError(
-                            "No known prefix for {} and generate=False".format(namespace)
-                        )
+                        raise KeyError("No known prefix for {} and generate=False".format(namespace))
                     num = 1
                     while 1:
                         prefix = "ns%s" % num
@@ -427,6 +468,7 @@ class NamespaceManager(object):
             if uri and uri[-1] == "#" and result[-1] != "#":
                 result = "%s#" % result
         return URIRef(result)
+
 
 # From: http://www.w3.org/TR/REC-xml#NT-CombiningChar
 #
@@ -517,10 +559,11 @@ def split_uri(uri, split_start=SPLIT_START_CATEGORIES):
             break
     raise ValueError("Can't split '{}'".format(uri))
 
+
 def insert_trie(trie, value):  # aka get_subtrie_or_insert
-    """ Insert a value into the trie if it is not already contained in the trie.
-        Return the subtree for the value regardless of whether it is a new value
-        or not. """
+    """Insert a value into the trie if it is not already contained in the trie.
+    Return the subtree for the value regardless of whether it is a new value
+    or not."""
     if value in trie:
         return trie[value]
     multi_check = False
@@ -537,9 +580,11 @@ def insert_trie(trie, value):  # aka get_subtrie_or_insert
         trie[value] = {}
     return trie[value]
 
+
 def insert_strie(strie, trie, value):
     if value not in strie:
         strie[value] = insert_trie(trie, value)
+
 
 def get_longest_namespace(trie, value):
     for key in trie:

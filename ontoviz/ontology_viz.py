@@ -10,16 +10,22 @@ from graph_element import Node
 from utils import Config, SCHEMA
 
 
-query_classes = prepareQuery("""
+query_classes = prepareQuery(
+    """
 SELECT ?s {
   { ?s a owl:Class } UNION
   { ?s owl:subClassOf+ ?o . ?o a owl:Class . }
-} """, initNs={'owl': OWL})
-query_properties = prepareQuery("""
+} """,
+    initNs={'owl': OWL},
+)
+query_properties = prepareQuery(
+    """
 SELECT ?s {
   { ?s a ?property } UNION { ?s owl:subPropertyOf+ ?o . ?o a ?property }
   FILTER ( ?property IN ( owl:DatatypeProperty, owl:ObjectProperty ) )
-} """, initNs={'owl': OWL})
+} """,
+    initNs={'owl': OWL},
+)
 common_ns = {URIRef(ns) for ns in (RDF, RDFS, SKOS, SCHEMA, XSD, DOAP, FOAF)}
 
 
@@ -105,10 +111,7 @@ class OntologyGraph:
             node_strings.append(self._dot_instance_node(instance, class_))
         for uri, literal in self.literals:
             node = Node(uri, node_color(self.config.colors.lit))
-            node.update({
-                "label": text_justify(literal, self.config.max_label_length),
-                "shape": "rect"
-            })
+            node.update({"label": text_justify(literal, self.config.max_label_length), "shape": "rect"})
             node_strings.append(node.to_draw())
         for s, p, o in self.edges:
             edge_strings.append('  "{}" -> "{}" [label="{}"]'.format(s, o, self._pred_label(p)))
@@ -127,22 +130,14 @@ class OntologyGraph:
         if self.tooltips[uri]:
             node.update({"tooltip": " ".join(self.tooltips[uri])})
         if isinstance(uri, BNode) or self.config.bnode_regex_match(uri):
-            node.update({
-                "label": "",
-                "shape": "circle"
-            })
+            node.update({"label": "", "shape": "circle"})
             return node.to_draw()
-        node.update({
-            "label": self.compute_label(uri, self.config.max_label_length)
-        })
+        node.update({"label": self.compute_label(uri, self.config.max_label_length)})
         return node.to_draw()
 
     @classmethod
     def generate_dotstring(cls, node_strings, edge_strings, fill):
-        dot = [
-            'digraph G {',
-            '  rankdir=BT'
-        ]
+        dot = ['digraph G {', '  rankdir=BT']
         if fill:
             dot.append('  node[style="filled" height=.3]')
         else:
@@ -161,9 +156,11 @@ class OntologyGraph:
         try:
             from graphviz import Source
         except ImportError:
-            raise ImportError("You don't have graphviz package installed.\n"
-                              "Please install graphviz or use write_file function to save dot file and generate the "
-                              "graph manually.")
+            raise ImportError(
+                "You don't have graphviz package installed.\n"
+                "Please install graphviz or use write_file function to save dot file and generate the "
+                "graph manually."
+            )
         dot = self.generate()
         graph = Source(dot)
         graph.format = format
@@ -186,15 +183,12 @@ class OntologyGraph:
             prefix, _, name = self.g.compute_qname(uri)
             label = '{}:{}'.format(prefix, name) if prefix else name
         if length and len(label) > length:
-            label = label[:length-3] + '...'
+            label = label[: length - 3] + '...'
         return label
 
 
 def node_color(color):
-    return {
-        "fillcolor": color,
-        "color": color
-    }
+    return {"fillcolor": color, "color": color}
 
 
 def text_justify(words, max_width):
@@ -216,12 +210,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate dot for the input ontology files')
     parser.add_argument('files', nargs='+', help='Input ontology files.')
     parser.add_argument('-f', '--format', dest='format', default='ttl', help='Input file format.')
-    parser.add_argument('-o', '--output', dest='out', default='ontology.dot',
-                        help='Location of output dot file.')
-    parser.add_argument('-O', '--ontology', dest='ontology', default=None,
-                        help='Provided ontology for the graph.')
-    parser.add_argument('-C', '--config', dest='config', default=None,
-                        help='Provided configuration.')
+    parser.add_argument('-o', '--output', dest='out', default='ontology.dot', help='Location of output dot file.')
+    parser.add_argument('-O', '--ontology', dest='ontology', default=None, help='Provided ontology for the graph.')
+    parser.add_argument('-C', '--config', dest='config', default=None, help='Provided configuration.')
     args = parser.parse_args()
 
     config = Config(args.config)

@@ -28,6 +28,7 @@ class Config:
 
     def read_config_file(self, config_file):
         import json
+
         with open(config_file) as f:
             config = json.load(f)
             self.blacklist = {URIRef(x) for x in config.get('blacklist', [])}
