@@ -1,4 +1,4 @@
-# Welcome to PyTimings's documentation!
+# Welcome to ontoviz's documentation!
 
 ```{toctree}
 :maxdepth: 2
