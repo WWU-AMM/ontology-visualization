@@ -5,9 +5,10 @@ from collections import defaultdict
 from rdflib import Graph, URIRef, Literal, BNode
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import RDF, RDFS, SKOS, XSD, DOAP, FOAF, OWL
-from namespace import NamespaceManager, split_uri
-from graph_element import Node
-from utils import Config, SCHEMA
+
+from ontoviz.namespace import NamespaceManager, split_uri
+from ontoviz.graph_element import Node
+from ontoviz.utils import Config, SCHEMA
 
 
 query_classes = prepareQuery(
@@ -204,17 +205,3 @@ def text_justify(words, max_width):
         num_of_letters += len(w)
     words = res + [' '.join(cur).center(max_)]
     return '\\n'.join(words)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate dot for the input ontology files')
-    parser.add_argument('files', nargs='+', help='Input ontology files.')
-    parser.add_argument('-f', '--format', dest='format', default='ttl', help='Input file format.')
-    parser.add_argument('-o', '--output', dest='out', default='ontology.dot', help='Location of output dot file.')
-    parser.add_argument('-O', '--ontology', dest='ontology', default=None, help='Provided ontology for the graph.')
-    parser.add_argument('-C', '--config', dest='config', default=None, help='Provided configuration.')
-    args = parser.parse_args()
-
-    config = Config(args.config)
-    og = OntologyGraph(args.files, config, args.format, ontology=args.ontology)
-    og.write_file(args.out)

@@ -36,7 +36,7 @@ setup(
     description="",
     entry_points={
         'console_scripts': [
-            'ontoviz=ontoviz.cli:main',
+            'ontoviz_to_dot=ontoviz.to_dot:main',
         ],
     },
     tests_require=tests_require,

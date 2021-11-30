@@ -8,5 +8,8 @@ repos:
     rev: v4.0.1
     hooks:
       - id: end-of-file-fixer
+        # regression test files should never be touched
+        exclude: ^tests/test_.*/.*
       - id: trailing-whitespace
+        exclude: ^tests/test_.*/.*
       - id: destroyed-symlinks
