@@ -1,12 +1,23 @@
+# Ontoviz
 
-# Installation
+[![image](https://img.shields.io/pypi/v/ontoviz.svg)](https://pypi.python.org/pypi/ontoviz)
+
+[![image](https://github.com/WWU-AMM/ontoviz/workflows/pytest/badge.svg)](https://github.com/WWU-AMM/ontoviz/actions)
+
+[![Documentation Status](https://readthedocs.org/projects/ontoviz/badge/?version=latest)](https://ontoviz.readthedocs.io/en/main/?badge=main)
+
+
+Ontology visualization with Python
+
+
+## Installation
 
 ```
 python -m pip install ontoviz
 ```
 
 
-# Example
+## Example
 
 ```
     ontoviz_to_dot -o test.dot test.ttl -O ontology.ttl
@@ -43,14 +54,14 @@ python -m pip install ontoviz
 -   Classes defined in the ontology will be omitted in the output graph. This action can be switched with argument `-V`.
 
 
-## Useful Graphviz flags
+### Useful Graphviz flags
 
 -   `-K` to specify which [layout algorithm](https://graphviz.gitlab.io/_pages/pdf/dot.1.pdf) to use. E.g. `-Kneato` and `-Ksfdp` . Notice that inorder to use `sfdp` layout algorithm, you will need to build your graphviz with [GTS](http://gts.sourceforge.net).
 -   `-T` to specify the [output format](https://graphviz.gitlab.io/_pages/doc/info/output.html).
 -   `-G` to set a [graph attribute](https://graphviz.gitlab.io/_pages/doc/info/attrs.html). E.g. `-Goverlap=prism`
 
 
-# Requirements
+## Requirements
 
 All the minimal Python requirements are installed during
 ```
@@ -61,13 +72,16 @@ For a development setup do
 ```
 git clone https://github.com/WWU-AMM/ontoviz
 cd ontoviz
+virtualenv venv
+. venv/bin/activate
 python -m pip install -e .[full]
+pre-commit install
 ```
 This will also install tools for documentation building and testing
 
 In order to convert `dot` into `png` or `svg` image, you will need [Graphviz](https://www.graphviz.org).
 
 
-# Testing
+## Testing
 
 Simply run `pytest` from the repository root. All tests are also run automatically by github actions on push/PR.
