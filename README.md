@@ -6,6 +6,8 @@
 
 [![Documentation Status](https://readthedocs.org/projects/ontoviz/badge/?version=latest)](https://ontoviz.readthedocs.io/en/main/?badge=main)
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 
 Ontology visualization with Python
 
