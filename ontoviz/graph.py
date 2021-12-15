@@ -64,7 +64,7 @@ class OntologyGraph:
             graph.parse(file, format=format)
 
     def _read_graph(self):
-        for s, p, o in self.g:
+        for s, p, o in sorted(tpl for tpl in self.g):
             if any(uri in self.config.blacklist for uri in (s, p, o)):
                 continue
             if p == RDF.type:
@@ -121,7 +121,7 @@ class OntologyGraph:
             node_strings.append(node.to_draw())
         for s, p, o in self.edges:
             edge_strings.append('  "{}" -> "{}" [label="{}"]'.format(s, o, self._pred_label(p)))
-        return node_strings, edge_strings
+        return sorted(node_strings), sorted(edge_strings)
 
     def _dot_class_node(self, class_):
         color = node_color(self.config.get_cls_color(class_))
