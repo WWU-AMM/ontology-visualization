@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
-from uuid import uuid4
+from uuid import UUID
+import random
 from collections import defaultdict
 from rdflib import Graph, URIRef, Literal, BNode
 from rdflib.plugins.sparql import prepareQuery
@@ -31,7 +32,10 @@ common_ns = {URIRef(ns) for ns in (RDF, RDFS, SKOS, SCHEMA, XSD, DOAP, FOAF)}
 
 
 class OntologyGraph:
-    def __init__(self, files, config, format='ttl', ontology=None):
+    def __init__(self, files, config, format='ttl', ontology=None, rng=None):
+        # this lets us user either "true" random UUID4 for literals, or a
+        # pre-seeded rng for reproducible UUIDs (in testing)
+        self._rng = rng or random.Random()
         self.g = Graph()
         self.g.namespace_manager = NamespaceManager(self.g)
         if ontology is not None:
@@ -76,7 +80,8 @@ class OntologyGraph:
             elif p in self.config.tooltip_property:
                 self.tooltips[s].append(o)
             elif isinstance(o, Literal):
-                literal_id = uuid4().hex
+                uuid = UUID(int=self._rng.getrandbits(128), version=4)
+                literal_id = uuid.hex
                 self.literals.add((literal_id, o))
                 self.add_edge((s, p, literal_id))
             else:

@@ -1,5 +1,6 @@
 from tempfile import NamedTemporaryFile
 import pytest
+import random
 
 from ontoviz.graph import OntologyGraph
 from ontoviz.utils import Config
@@ -14,9 +15,11 @@ def runmodule(filename):
 
 @pytest.mark.xfail(msg="Still failing, see https://github.com/WWU-AMM/ontoviz/pull/4")
 def test_output(file_regression, shared_datadir):
+    rng = random.Random()
+    rng.seed(123)
     config = Config(shared_datadir / 'config.json')
     ttl = shared_datadir / 'test.ttl'
-    og = OntologyGraph(files=[ttl], config=config, format='ttl', ontology=None)
+    og = OntologyGraph(files=[ttl], config=config, format='ttl', ontology=None, rng=rng)
 
     with NamedTemporaryFile() as out:
         og.write_file(out.name)
