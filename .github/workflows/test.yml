@@ -63,7 +63,7 @@ jobs:
         pip install mpi4py
     - name: run pytest
       run: |
-        pytest
+        pytest --cov=./ --cov-report xml
     - name: "Upload coverage"
       uses: codecov/codecov-action@v2.1.0
       with:
