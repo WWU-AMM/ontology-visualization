@@ -28,6 +28,9 @@ jobs:
       run: |
         pip install dist/ontoviz*whl
         ontoviz_to_dot --help
+    - name: Print version
+      run: |
+        python -c "import ontoviz;print(ontoviz.__version__)"
     - name: Publish distribution 📦 to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
