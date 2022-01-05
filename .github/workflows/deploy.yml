@@ -9,7 +9,7 @@ on:
 
 jobs:
   pypi:
-
+    name: PyPi Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +39,7 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
   github:
-    name: Create Release
+    name: GitHub Release
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
