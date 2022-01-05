@@ -3,7 +3,8 @@ import argparse
 from ontoviz.graph import OntologyGraph
 from ontoviz.utils import Config
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser(description='Generate dot for the input ontology files')
     parser.add_argument('files', nargs='+', help='Input ontology files.')
     parser.add_argument('-f', '--format', dest='format', default='ttl', help='Input file format.')
@@ -15,3 +16,7 @@ if __name__ == '__main__':
     config = Config(args.config)
     og = OntologyGraph(args.files, config, args.format, ontology=args.ontology)
     og.write_file(args.out)
+
+
+if __name__ == '__main__':
+    main()
