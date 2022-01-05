@@ -1,10 +1,6 @@
 on:
   push:
-    branches:
-    - main
   pull_request:
-    branches:
-    - main
 
 name: pytest
 jobs:
@@ -39,31 +35,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install .[ci]
-    - name: Install MPI (linux)
-      if: contains(matrix.config.os, 'ubuntu')
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y mpi-default-dev
-        pip install mpi4py
-    - name: Download Microsoft MPI
-      if: contains(matrix.config.os, 'windows')
-      run: (new-object net.webclient).DownloadFile("https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe",
-        "msmpisetup.exe")
-      shell: powershell
-    - name: Install MPI (win)
-      if: contains(matrix.config.os, 'windows')
-      run: |
-        msmpisetup.exe -unattend -minimal
-        pip install mpi4py
-      shell: cmd
-    - name: Install MPI (osx)
-      if: contains(matrix.config.os, 'macOS')
-      run: |
-        brew install openmpi
-        pip install mpi4py
     - name: run pytest
       run: |
-        pytest
+        pytest --cov=./ --cov-report xml
     - name: "Upload coverage"
       uses: codecov/codecov-action@v2.1.0
       with:
