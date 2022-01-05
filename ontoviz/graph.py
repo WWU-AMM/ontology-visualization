@@ -129,7 +129,10 @@ class OntologyGraph:
 
     def _dot_instance_node(self, instance, class_=None):
         color = node_color(self.config.get_ins_color(class_))
-        return self._dot_node(instance, color)
+        # instead of using the python object id (which randomly changes) as URI use a proper UUID
+        id_ = instance
+        str(UUID(int=self._rng.getrandbits(128), version=4).hex)
+        return self._dot_node(id_, color)
 
     def _dot_node(self, uri, attrs):
         node = Node(uri, attrs)
