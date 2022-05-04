@@ -3,7 +3,7 @@
 -r requirements-ci.txt
 graphviz==0.17
 matplotlib
-myst-nb>=0.13.1
+myst-nb>=0.14.0
 packaging
 pytest-runner>=2.9
 python-slugify
